@@ -42,7 +42,7 @@ class LinkedList:
                 traversal.append(current_node.value)
                 current_node = current_node.next
 
-            return traversal
+            return traversal, self.start_node
 
     def traverse_skips(self):
         traversal = []
@@ -64,34 +64,48 @@ class LinkedList:
             return traversal
 
     def add_skip_connections(self):
-        n_skips = math.floor(math.sqrt(self.length))
-        if n_skips * n_skips == self.length:
-            n_skips = n_skips - 1
+        n_skips = int(round(math.sqrt(self.length)))
+        # if n_skips * n_skips == self.length:
+        #     n_skips = n_skips - 1
         """ Write logic to add skip pointers to the linked list. 
             This function does not return anything.
             To be implemented."""
         self.skip_length = n_skips
 
-        if self.length < 2:
+        if self.length <= 2:
             return
-
+        
+        dist_between_skips = int(round(math.sqrt(self.length)))
+        # print(f"distance between skips: {distance_between_skips}")
         current = self.start_node
+        prev_skip = self.start_node
+        c = 0
+        while current:
+            if c == dist_between_skips:
+                if prev_skip:
+                    prev_skip.skip = current
+                prev_skip = current
+                c = 0
+            current = current.next
+            c+=1
 
-        for i in range(self.skip_length):
-            if current:
-                current = current.next
-            else:
-                break
+        # current = self.start_node
+
+        # for i in range(self.skip_length):
+        #     if current:
+        #         current = current.next
+        #     else:
+        #         break
 
         
-        skip_curr = self.start_node
+        # skip_curr = self.start_node
 
-        while current and current.next:
-            skip_curr.skip = current.next
-            for i in range(self.skip_length):
-                if current:
-                    current = current.next
-            skip_curr = skip_curr.skip
+        # while current and current.next:
+        #     skip_curr.skip = current.next
+        #     for i in range(self.skip_length):
+        #         if current:
+        #             current = current.next
+        #     skip_curr = skip_curr.skip
             
             # skip_curr = skip_curr.skip
 

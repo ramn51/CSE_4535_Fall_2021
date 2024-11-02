@@ -35,12 +35,11 @@ def execute_query():
 
     print('Queries stuff::', normalized_queries, original_queries)
 
-    random_command = request.json["random_command"]
 
     output_location = 'output_flask.json'
 
     """ Running the queries against the pre-loaded index. """
-    output_dict = boolean_retrieval_runner.run_queries(normalized_queries, original_queries, random_command, sanity_checker=True)
+    output_dict = boolean_retrieval_runner.run_queries(normalized_queries, original_queries)
 
    
     username_hash = hashlib.md5(username.encode()).hexdigest()
@@ -60,7 +59,7 @@ def execute_query():
 if __name__ == "__main__":
     boolean_retrieval_runner = BooleanRetrievalRunner()
 
-    corpus_path = '../project2/data/input_corpus.txt'
+    corpus_path = 'input_corpus.txt'
     boolean_retrieval_runner.run_indexer(corpus_path)
 
     app.run(port=9999)

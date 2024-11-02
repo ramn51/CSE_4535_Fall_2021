@@ -4,6 +4,7 @@ Institute: University at Buffalo
 '''
 
 import collections
+import nltk
 from nltk.stem import PorterStemmer
 import re
 from nltk.corpus import stopwords
@@ -32,7 +33,7 @@ class Preprocessor:
             Write the code in such a way that it can be re-used for processing the user's query.
             To be implemented."""
         text = text.lower()
-        text = re.sub(r'[^\w\s]', '', text)
+        text = re.sub(r'[^\w\s]', ' ', text)
 
         # White Space tokenization
         text = text.strip()

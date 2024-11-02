@@ -91,7 +91,7 @@ class Indexer:
                 res[inverted_index_key][term] = []
             else:
                 if not use_skip:
-                    term_docs = self.inverted_index[term].traverse_list()
+                    term_docs, list_head = self.inverted_index[term].traverse_list()
                 else:
                     term_docs = self.inverted_index[term].traverse_skips()
                 
@@ -106,7 +106,7 @@ class Indexer:
         updated_index = OrderedDict({})
 
         for term, posting_list in self.inverted_index.items():
-            term_docs = posting_list.traverse_list()
+            term_docs, list_head = posting_list.traverse_list()
 
             idf = math.log(total_docs / len(term_docs)) if use_log else (total_docs / len(term_docs))
 
@@ -136,16 +136,28 @@ if __name__ == '__main__':
     Indexer1 = Indexer()
     Indexer2 = Indexer()
     inverted_index, total_docs =  Indexer1.create_index(preprocessed_data)
+    import sys
 
-    print("WITHOUT ADDING SKIP (NEW WAY WITH SEPARATION)", inverted_index['effect'].traverse_list(), len(inverted_index['effect'].traverse_list()))
+    log_file = open('log.txt', 'w')
+    sys.stdout = log_file
+
+    # print("WITHOUT ADDING SKIP (NEW WAY WITH SEPARATION)", inverted_index['effect'].traverse_list(), len(inverted_index['effect'].traverse_list()))
 
     inverted_index_norm, total_docs_norm =  Indexer1.create_postings_dict(preprocessed_data)
-    print("WITHOUT ADDING SKIP OLD WAY (USING THE METHOD DOES FULLY)", inverted_index_norm['effect'].traverse_list())
+    print("WITHOUT ADDING SKIP OLD WAY (USING THE METHOD DOES FULLY)", inverted_index_norm['coronaviru'].traverse_list())
+
+    print(len(inverted_index_norm['coronaviru'].traverse_list()))
+    for i, head in inverted_index_norm['coronaviru'].traverse_list():
+        print(i[0])
 
     # Adding skip pointers
     inverted_index2, total_docs2 =  Indexer2.create_index(preprocessed_data)
     inverted_index2 = Indexer2.add_skip_connections()
-    print("WITH ADDING SKIP", inverted_index2['effect'].traverse_skips())
+    print("WITH ADDING SKIP", inverted_index2['coronaviru'].traverse_skips())
+
+    print(len(inverted_index2['coronaviru'].traverse_skips()))
+    for i in inverted_index2['coronaviru'].traverse_skips():
+        print(i[0])
 
     tf_idf_index = Indexer2.calculate_tf_idf(total_docs)
     # print(tf_idf_index['effect'].traverse_list())
